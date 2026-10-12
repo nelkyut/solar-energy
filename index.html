@@ -3,193 +3,1000 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SolarLab Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SolarLab | Solar System Designer</title>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#0b1020;color:#eef3ff;font:15px Arial,sans-serif}
-header{padding:24px 6%;background:#121a2d;border-bottom:1px solid #293651}
-header h1{margin:0;color:#f6c453}
-header p,.muted{color:#9aa9c4}
-main{max-width:1100px;margin:28px auto;padding:0 16px}
-h2{font-size:19px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
-.card{background:#121a2d;border:1px solid #293651;border-radius:14px;padding:20px}
-label{display:block;font-size:13px;color:#b9c6dc;margin:12px 0 6px}
-input,select{width:100%;padding:11px;background:#0b1020;color:white;border:1px solid #35435f;border-radius:7px}
-.result{background:#292619;border:1px solid #65532b;padding:14px;border-radius:9px;margin-top:16px}
-.result strong{color:#f6c453;font-size:21px}
-button{padding:12px 16px;border:0;border-radius:8px;background:#f6c453;color:#171717;font-weight:bold;cursor:pointer;margin-top:12px}
-.status{padding:12px;background:#192c2b;border-radius:8px;line-height:1.6;margin-top:12px}
-footer{padding:25px 0;color:#9aa9c4;font-size:12px;line-height:1.6}
+:root {
+  --bg: #08111f;
+  --panel: #111e30;
+  --panel2: #17263b;
+  --line: #2a3b53;
+  --text: #edf5ff;
+  --muted: #94a8c2;
+  --green: #36e0a1;
+  --yellow: #ffcb66;
+  --blue: #58b5ff;
+  --purple: #bb91ff;
+  --red: #ff7777;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  background:
+    radial-gradient(ellipse at 10% 0%, #12304a 0%, transparent 36%),
+    var(--bg);
+  color: var(--text);
+}
+
+input, select, button { font: inherit; }
+
+button { cursor: pointer; }
+
+.topbar {
+  padding: 22px 5%;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+  background: rgba(8,17,31,.8);
+}
+
+.brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.logo {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  font-size: 26px;
+  background: linear-gradient(135deg,#1a7458,#123e54);
+  border: 1px solid #287b69;
+}
+
+.brand h1 {
+  font-size: 22px;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.brand p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.status {
+  color: var(--green);
+  border: 1px solid #28634f;
+  background: #102b27;
+  padding: 8px 12px;
+  border-radius: 30px;
+  font-size: 12px;
+}
+
+main {
+  max-width: 1450px;
+  padding: 26px 4%;
+  margin: auto;
+}
+
+.intro {
+  margin-bottom: 24px;
+}
+
+.intro h2 {
+  font-size: clamp(24px, 3vw, 34px);
+  margin: 0 0 8px;
+}
+
+.intro p {
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 28px 0 15px;
+}
+
+.section-title h3 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.section-title span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.diagram {
+  padding: 24px;
+  background: linear-gradient(145deg,#101f32,#0c1727);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.diagram-grid {
+  display: grid;
+  grid-template-columns: repeat(5,minmax(0,1fr));
+  align-items: stretch;
+  gap: 10px;
+}
+
+.component {
+  position: relative;
+  min-width: 0;
+  border: 1px solid var(--line);
+  background: #142238;
+  border-radius: 15px;
+  padding: 14px 10px;
+  text-align: center;
+}
+
+.component:not(:last-child)::after {
+  content: "➜";
+  position: absolute;
+  right: -17px;
+  top: 37px;
+  z-index: 2;
+  color: var(--green);
+  font-size: 20px;
+  text-shadow: 0 0 12px #36e0a177;
+}
+
+.component .emoji {
+  font-size: 38px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.component h4 {
+  font-size: 12px;
+  margin: 0 0 7px;
+}
+
+.component p {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.component.pv { border-top: 3px solid var(--yellow); }
+.component.battery { border-top: 3px solid var(--blue); }
+.component.scc { border-top: 3px solid var(--purple); }
+.component.inverter { border-top: 3px solid var(--green); }
+.component.protection { border-top: 3px solid var(--red); }
+
+.diagram-note {
+  margin-top: 20px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 16px;
+}
+
+.card {
+  background: linear-gradient(145deg,#142238,#101a2a);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 20px;
+  min-width: 0;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.card-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 13px;
+  background: #26334a;
+  font-size: 26px;
+}
+
+.card-head h3 {
+  margin: 0 0 5px;
+  font-size: 16px;
+}
+
+.card-head p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 15px 12px;
+}
+
+.field label {
+  display: block;
+  font-size: 12px;
+  color: #bdcce0;
+  margin-bottom: 7px;
+}
+
+.field input, .field select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  background: #091423;
+  border: 1px solid #30425c;
+  color: var(--text);
+  border-radius: 9px;
+  padding: 11px 10px;
+  outline: none;
+}
+
+.field input:focus, .field select:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 2px #36e0a11a;
+}
+
+.field small {
+  display: block;
+  color: var(--muted);
+  margin-top: 5px;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.full { grid-column: 1 / -1; }
+
+.pv-color { color: var(--yellow); }
+.battery-color { color: var(--blue); }
+.scc-color { color: var(--purple); }
+.inverter-color { color: var(--green); }
+
+.results {
+  display: grid;
+  grid-template-columns: repeat(4,minmax(0,1fr));
+  gap: 13px;
+}
+
+.metric {
+  background: #122238;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  padding: 17px;
+  min-width: 0;
+}
+
+.metric .label {
+  color: var(--muted);
+  font-size: 11px;
+  margin-bottom: 11px;
+}
+
+.metric .value {
+  font-size: clamp(20px,2.3vw,29px);
+  font-weight: 750;
+  letter-spacing: -.7px;
+  overflow-wrap: anywhere;
+}
+
+.metric .unit {
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 5px;
+}
+
+.metric.green { border-top: 3px solid var(--green); }
+.metric.yellow { border-top: 3px solid var(--yellow); }
+.metric.blue { border-top: 3px solid var(--blue); }
+.metric.purple { border-top: 3px solid var(--purple); }
+
+.result-layout {
+  display: grid;
+  grid-template-columns: minmax(0,1.5fr) minmax(270px,1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.result-panel {
+  background: #111e30;
+  border: 1px solid var(--line);
+  border-radius: 17px;
+  padding: 20px;
+  min-width: 0;
+}
+
+.result-panel h3 {
+  margin: 0 0 16px;
+  font-size: 15px;
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 12px 0;
+  border-bottom: 1px solid #25344a;
+  font-size: 12px;
+}
+
+.result-row:last-child { border-bottom: 0; }
+
+.result-row span:first-child { color: var(--muted); }
+.result-row strong { text-align: right; overflow-wrap: anywhere; }
+
+.warnings {
+  display: grid;
+  gap: 9px;
+}
+
+.notice {
+  padding: 12px 13px;
+  border-radius: 10px;
+  background: #17283b;
+  border: 1px solid #2d4056;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.notice.good {
+  background: #102b27;
+  border-color: #28634f;
+}
+
+.notice.warn {
+  background: #332719;
+  border-color: #75552c;
+}
+
+.notice.bad {
+  background: #351d25;
+  border-color: #773444;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+.btn {
+  padding: 11px 16px;
+  border: 1px solid #354860;
+  background: #192b42;
+  color: var(--text);
+  border-radius: 10px;
+  font-weight: 650;
+  font-size: 12px;
+}
+
+.btn.primary {
+  background: #1e7657;
+  border-color: #36b887;
+}
+
+.btn:hover { filter: brightness(1.15); }
+
+.disclaimer {
+  padding: 16px;
+  background: #241f18;
+  border: 1px solid #5e492b;
+  color: #e9cfa1;
+  border-radius: 12px;
+  font-size: 12px;
+  line-height: 1.7;
+  margin-top: 22px;
+}
+
+footer {
+  text-align: center;
+  color: #71839c;
+  font-size: 11px;
+  padding: 28px 10px;
+}
+
+@media(max-width:900px) {
+  .diagram-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .component:not(:last-child)::after { display:none; }
+  .results { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .result-layout { grid-template-columns: 1fr; }
+}
+
+@media(max-width:560px) {
+  main { padding: 20px 13px; }
+  .topbar { padding: 16px; }
+  .cards { grid-template-columns: 1fr; }
+  .diagram { padding: 12px; }
+  .diagram-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .fields { gap: 13px 9px; }
+  .card { padding: 15px; }
+  .component { padding: 12px 7px; }
+  .component .emoji { font-size: 32px; }
+  .results { gap: 9px; }
+  .metric { padding: 12px; }
+}
 </style>
 </head>
+
 <body>
-<header>
-  <h1>☀ SolarLab</h1>
-  <p>DIY Solar System Calculator · Version 1.0</p>
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">☀️</div>
+    <div>
+      <h1>SOLAR<span style="color:#36e0a1">LAB</span></h1>
+      <p>DIY SOLAR SYSTEM DESIGNER</p>
+    </div>
+  </div>
+  <div class="status">● LIVE CALCULATOR</div>
 </header>
 
 <main>
-  <p class="muted">Ilagay ang specifications ng iyong solar components para makuha ang estimated outputs at basic compatibility checks.</p>
-
-  <div class="grid">
-    <section class="card">
-      <h2>☀ Solar Panels</h2>
-      <label>Panel wattage (W)</label>
-      <input id="panelW" type="number" min="1" value="550">
-      <label>Number of panels</label>
-      <input id="panels" type="number" min="1" value="4">
-      <label>Voc per panel (V)</label>
-      <input id="voc" type="number" min="0" step=".1" value="49.8">
-      <label>Vmp per panel (V)</label>
-      <input id="vmp" type="number" min="0" step=".1" value="41.7">
-      <label>Panels connected in series</label>
-      <input id="series" type="number" min="1" value="2">
-      <label>Peak sun hours per day</label>
-      <input id="sun" type="number" min="0" step=".5" value="5">
-      <div class="result">Total PV power<br><strong id="pvOut">2,200 W</strong></div>
-      <p id="pvDetails" class="muted"></p>
-    </section>
-
-    <section class="card">
-      <h2>▰ Battery Bank</h2>
-      <label>Battery voltage per unit (V)</label>
-      <select id="unitV">
-        <option value="12">12 V</option>
-        <option value="24">24 V</option>
-        <option value="48">48 V</option>
-      </select>
-      <label>Capacity per battery (Ah)</label>
-      <input id="ah" type="number" min="1" value="100">
-      <label>Number of batteries in series</label>
-      <input id="bSeries" type="number" min="1" value="2">
-      <label>Number of parallel strings</label>
-      <input id="parallel" type="number" min="1" value="1">
-      <label>Usable capacity (%)</label>
-      <input id="dod" type="number" min="1" max="100" value="80">
-      <div class="result">Nominal bank energy<br><strong id="batteryOut">2.40 kWh</strong></div>
-      <p id="batteryDetails" class="muted"></p>
-    </section>
-
-    <section class="card">
-      <h2>ϟ Inverter</h2>
-      <label>Inverter rated power (W)</label>
-      <input id="invW" type="number" min="1" value="2000">
-      <label>AC load (W)</label>
-      <input id="load" type="number" min="0" value="1000">
-      <label>Efficiency (%)</label>
-      <input id="eff" type="number" min="1" max="100" value="90">
-      <label>Inverter DC voltage (V)</label>
-      <select id="invV">
-        <option value="12">12 V</option>
-        <option value="24" selected>24 V</option>
-        <option value="48">48 V</option>
-      </select>
-      <div class="result">Estimated DC current<br><strong id="currentOut">46.3 A</strong></div>
-      <p id="invDetails" class="muted"></p>
-    </section>
-
-    <section class="card">
-      <h2>⌁ Solar Charge Controller</h2>
-      <label>SCC rated output current (A)</label>
-      <input id="sccA" type="number" min="1" value="60">
-      <label>Maximum PV input voltage (V)</label>
-      <input id="sccV" type="number" min="1" value="150">
-      <label>Cold-weather Voc factor (%)</label>
-      <input id="cold" type="number" min="100" max="150" value="115">
-      <label>PV string Voc (V)</label>
-      <input id="stringVoc" type="number" min="0" step=".1" value="99.6">
-      <label>SCC battery voltage (V)</label>
-      <select id="sccBV">
-        <option value="12">12 V</option>
-        <option value="24" selected>24 V</option>
-        <option value="48">48 V</option>
-      </select>
-      <div class="result">Estimated charging current<br><strong id="chargeOut">76.4 A</strong></div>
-      <div id="sccDetails" class="status"></div>
-    </section>
-  </div>
-
-  <section class="card" style="margin-top:16px">
-    <h2>System Summary</h2>
-    <p id="summary">Calculating...</p>
-    <button onclick="resetValues()">Reset sample values</button>
+  <section class="intro">
+    <h2>Build your solar system.</h2>
+    <p>Configure your panels, batteries, charge controller, and inverter. The calculations update automatically as you change the values.</p>
   </section>
 
-  <footer>
-    IMPORTANT: Estimates only. Actual design must consider panel temperature coefficient,
-    battery BMS limits, cable sizing, fuses/breakers, inverter surge power, and manufacturer
-    specifications. Never exceed the controller's maximum PV input voltage.
-  </footer>
+  <div class="section-title">
+    <h3>01 / System Diagram</h3>
+    <span>Illustrative power flow</span>
+  </div>
+
+  <section class="diagram">
+    <div class="diagram-grid">
+      <div class="component pv">
+        <span class="emoji">☀️</span>
+        <h4>SOLAR ARRAY</h4>
+        <p id="diagramPV">0 W total</p>
+      </div>
+      <div class="component protection">
+        <span class="emoji">🔌</span>
+        <h4>PV PROTECTION</h4>
+        <p>DC isolator / fuse</p>
+      </div>
+      <div class="component scc">
+        <span class="emoji">⚙️</span>
+        <h4>MPPT / SCC</h4>
+        <p id="diagramSCC">Charge controller</p>
+      </div>
+      <div class="component battery">
+        <span class="emoji">🔋</span>
+        <h4>BATTERY BANK</h4>
+        <p id="diagramBattery">0 V bank</p>
+      </div>
+      <div class="component inverter">
+        <span class="emoji">⚡</span>
+        <h4>INVERTER / LOAD</h4>
+        <p id="diagramInverter">0 W load</p>
+      </div>
+    </div>
+    <div class="diagram-note">
+      ☀️ Solar panels → DC protection → SCC → Battery bank → Inverter → AC loads<br>
+      Simplified illustration only. Actual wiring depends on equipment and system design.
+    </div>
+  </section>
+
+  <div class="section-title">
+    <h3>02 / System Configuration</h3>
+    <span>Edit the values below</span>
+  </div>
+
+  <section class="cards">
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">☀️</div>
+        <div>
+          <h3 class="pv-color">Solar Panels</h3>
+          <p>PV array specifications</p>
+        </div>
+      </div>
+      <div class="fields">
+        <div class="field">
+          <label for="panelW">Panel wattage (W)</label>
+          <input id="panelW" type="number" min="0" value="550">
+        </div>
+        <div class="field">
+          <label for="panelQty">Total panels</label>
+          <input id="panelQty" type="number" min="1" step="1" value="4">
+        </div>
+        <div class="field">
+          <label for="voc">Panel Voc (V)</label>
+          <input id="voc" type="number" min="0" step="0.1" value="49.5">
+          <small>Open-circuit voltage</small>
+        </div>
+        <div class="field">
+          <label for="vmp">Panel Vmp (V)</label>
+          <input id="vmp" type="number" min="0" step="0.1" value="41.5">
+          <small>Voltage at maximum power</small>
+        </div>
+        <div class="field">
+          <label for="series">Panels in series</label>
+          <input id="series" type="number" min="1" step="1" value="2">
+        </div>
+        <div class="field">
+          <label for="psh">Peak sun hours/day</label>
+          <input id="psh" type="number" min="0" max="24" step="0.1" value="5">
+        </div>
+        <div class="field">
+          <label for="derate">System efficiency (%)</label>
+          <input id="derate" type="number" min="1" max="100" value="80">
+          <small>Estimated overall energy factor</small>
+        </div>
+        <div class="field">
+          <label for="vocFactor">Cold Voc multiplier</label>
+          <input id="vocFactor" type="number" min="1" step="0.01" value="1.20">
+          <small>Example: 1.20 means +20%</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">🔋</div>
+        <div>
+          <h3 class="battery-color">Battery Bank</h3>
+          <p>Battery arrangement and storage</p>
+        </div>
+      </div>
+      <div class="fields">
+        <div class="field">
+          <label for="batV">Battery unit voltage (V)</label>
+          <input id="batV" type="number" min="1" value="12">
+        </div>
+        <div class="field">
+          <label for="batAh">Capacity per battery (Ah)</label>
+          <input id="batAh" type="number" min="1" value="100">
+        </div>
+        <div class="field">
+          <label for="batSeries">Batteries in series</label>
+          <input id="batSeries" type="number" min="1" step="1" value="2">
+        </div>
+        <div class="field">
+          <label for="batParallel">Parallel strings</label>
+          <input id="batParallel" type="number" min="1" step="1" value="1">
+        </div>
+        <div class="field">
+          <label for="dod">Usable capacity (%)</label>
+          <input id="dod" type="number" min="1" max="100" value="80">
+          <small>Depends on battery chemistry</small>
+        </div>
+        <div class="field">
+          <label for="batChem">Battery chemistry</label>
+          <select id="batChem">
+            <option value="LiFePO4">LiFePO₄</option>
+            <option value="Lead-acid">Lead-acid</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">⚙️</div>
+        <div>
+          <h3 class="scc-color">Solar Charge Controller</h3>
+          <p>SCC / MPPT limits</p>
+        </div>
+      </div>
+      <div class="fields">
+        <div class="field">
+          <label for="sccA">Rated output current (A)</label>
+          <input id="sccA" type="number" min="1" value="60">
+        </div>
+        <div class="field">
+          <label for="sccVoc">Maximum PV input Voc (V)</label>
+          <input id="sccVoc" type="number" min="1" value="150">
+        </div>
+        <div class="field">
+          <label for="sccMin">Minimum MPPT voltage (V)</label>
+          <input id="sccMin" type="number" min="0" value="60">
+          <small>Use the manufacturer's specified minimum</small>
+        </div>
+        <div class="field">
+          <label for="sccMax">Maximum MPPT voltage (V)</label>
+          <input id="sccMax" type="number" min="1" value="120">
+          <small>Operating range upper limit, not max Voc</small>
+        </div>
+        <div class="field">
+          <label for="sccEff">SCC efficiency (%)</label>
+          <input id="sccEff" type="number" min="1" max="100" value="95">
+        </div>
+        <div class="field">
+          <label for="sccPVMaxW">Max PV array power (W)</label>
+          <input id="sccPVMaxW" type="number" min="0" value="1600">
+          <small>Check the controller datasheet</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div class="card-icon">⚡</div>
+        <div>
+          <h3 class="inverter-color">Inverter & AC Load</h3>
+          <p>DC-to-AC power conversion</p>
+        </div>
+      </div>
+      <div class="fields">
+        <div class="field">
+          <label for="invW">Inverter rated power (W)</label>
+          <input id="invW" type="number" min="1" value="2000">
+        </div>
+        <div class="field">
+          <label for="loadW">Total running load (W)</label>
+          <input id="loadW" type="number" min="0" value="500">
+        </div>
+        <div class="field">
+          <label for="invEff">Inverter efficiency (%)</label>
+          <input id="invEff" type="number" min="1" max="100" value="90">
+        </div>
+        <div class="field">
+          <label for="invV">Inverter DC input (V)</label>
+          <select id="invV">
+            <option value="12">12 V</option>
+            <option value="24" selected>24 V</option>
+            <option value="48">48 V</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label for="surgeW">Expected surge power (W)</label>
+          <input id="surgeW" type="number" min="0" value="1000">
+          <small>Compare with the inverter's specified surge rating and duration.</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-title">
+    <h3>03 / Live System Results</h3>
+    <span>Automatically updated</span>
+  </div>
+
+  <section class="results">
+    <div class="metric yellow">
+      <div class="label">TOTAL PV POWER</div>
+      <div class="value" id="rPV">—</div>
+      <div class="unit">Watts peak (Wp)</div>
+    </div>
+    <div class="metric blue">
+      <div class="label">BATTERY STORAGE</div>
+      <div class="value" id="rBat">—</div>
+      <div class="unit">Nominal watt-hours</div>
+    </div>
+    <div class="metric green">
+      <div class="label">DAILY ENERGY</div>
+      <div class="value" id="rEnergy">—</div>
+      <div class="unit">Estimated kWh/day</div>
+    </div>
+    <div class="metric purple">
+      <div class="label">SCC CHARGE CURRENT</div>
+      <div class="value" id="rCharge">—</div>
+      <div class="unit">Estimated amperes</div>
+    </div>
+  </section>
+
+  <div class="section-title">
+    <h3>04 / Electrical Calculations</h3>
+    <span>Estimated values</span>
+  </div>
+
+  <section class="result-layout">
+    <div class="result-panel">
+      <h3>📊 System specifications</h3>
+      <div class="result-row"><span>Panel configuration</span><strong id="oConfig">—</strong></div>
+      <div class="result-row"><span>String operating voltage (Vmp)</span><strong id="oVmp">—</strong></div>
+      <div class="result-row"><span>String open-circuit voltage (Voc)</span><strong id="oVoc">—</strong></div>
+      <div class="result-row"><span>Estimated cold Voc</span><strong id="oColdVoc">—</strong></div>
+      <div class="result-row"><span>Estimated daily energy</span><strong id="oEnergy">—</strong></div>
+      <div class="result-row"><span>Battery bank voltage</span><strong id="oBatV">—</strong></div>
+      <div class="result-row"><span>Battery bank capacity</span><strong id="oBatAh">—</strong></div>
+      <div class="result-row"><span>Usable battery energy</span><strong id="oUsable">—</strong></div>
+      <div class="result-row"><span>Estimated DC current at load</span><strong id="oDC">—</strong></div>
+      <div class="result-row"><span>PV array operating current</span><strong id="oPVCurrent">—</strong></div>
+      <div class="result-row"><span>PV power / SCC power limit</span><strong id="oSCCPower">—</strong></div>
+      <div class="result-row"><span>Estimated battery charging power</span><strong id="oChargePower">—</strong></div>
+    </div>
+
+    <div class="result-panel">
+      <h3>🛡️ Compatibility checks</h3>
+      <div class="warnings" id="warnings">
+        <div class="notice">Enter your equipment specifications to begin.</div>
+      </div>
+      <div class="actions">
+        <button class="btn primary" id="sampleBtn" type="button">↻ Load sample values</button>
+        <button class="btn" id="resetBtn" type="button">Reset</button>
+        <button class="btn" id="printBtn" type="button">Print results</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="disclaimer">
+    <strong>⚠️ Important safety note</strong><br>
+    These calculations are preliminary estimates, not an installation design or safety certification. Verify the exact SCC maximum PV open-circuit voltage, MPPT operating range, permitted PV wattage, battery charging limits, inverter surge rating, BMS limits, cable sizes, grounding, disconnects, and fuse/breaker ratings against the actual manufacturers' specifications. Cold-weather Voc must use the panel's temperature coefficient and the expected minimum cell temperature. Have the system checked by a qualified solar installer or electrician before energizing.
+  </div>
 </main>
+
+<footer>SolarLab • DIY Solar System Designer • Educational estimates only</footer>
 
 <script>
 const $ = id => document.getElementById(id);
-const n = id => Number($(id).value) || 0;
-const fmt = (v,d=1) => v.toLocaleString("en-US",{maximumFractionDigits:d});
-const initial = {};
-document.querySelectorAll("input,select").forEach(el => initial[el.id]=el.value);
 
-function calculate(){
-  const pw=Math.max(0,n("panelW"));
-  const qty=Math.max(0,Math.floor(n("panels")));
-  const series=Math.max(1,Math.floor(n("series")));
-  const pv=pw*qty;
-  const voc=n("voc")*series;
-  const vmp=n("vmp")*series;
-  const daily=pv*n("sun")*.8;
+const inputIds = [
+  "panelW","panelQty","voc","vmp","series","psh","derate","vocFactor",
+  "batV","batAh","batSeries","batParallel","dod","batChem",
+  "sccA","sccVoc","sccMin","sccMax","sccEff","sccPVMaxW",
+  "invW","loadW","invEff","invV","surgeW"
+];
 
-  $("pvOut").textContent=fmt(pv,0)+" W";
-  $("pvDetails").textContent=
-    "String Voc (STC): "+fmt(voc)+" V · String Vmp: "+fmt(vmp)+
-    " V · Estimated daily energy: "+fmt(daily/1000,2)+" kWh";
+const defaults = {
+  panelW:550, panelQty:4, voc:49.5, vmp:41.5, series:2,
+  psh:5, derate:80, vocFactor:1.20,
+  batV:12, batAh:100, batSeries:2, batParallel:1, dod:80,
+  batChem:"LiFePO4",
+  sccA:60, sccVoc:150, sccMin:60, sccMax:120, sccEff:95,
+  sccPVMaxW:1600,
+  invW:2000, loadW:500, invEff:90, invV:"24", surgeW:1000
+};
 
-  const unitV=n("unitV"), ah=Math.max(0,n("ah"));
-  const bs=Math.max(1,Math.floor(n("bSeries")));
-  const par=Math.max(1,Math.floor(n("parallel")));
-  const bankV=unitV*bs, bankAh=ah*par;
-  const wh=bankV*bankAh, usable=wh*Math.min(100,Math.max(0,n("dod")))/100;
-
-  $("batteryOut").textContent=fmt(wh/1000,2)+" kWh";
-  $("batteryDetails").textContent="Bank voltage: "+fmt(bankV,0)+
-    " V · Capacity: "+fmt(bankAh,0)+" Ah · Usable energy: "+
-    fmt(usable/1000,2)+" kWh · Total batteries: "+(bs*par);
-
-  const invV=n("invV"), invW=Math.max(0,n("invW"));
-  const load=Math.max(0,n("load"));
-  const eff=Math.min(100,Math.max(1,n("eff")))/100;
-  const dcW=load/eff, amps=dcW/Math.max(1,invV);
-  $("currentOut").textContent=fmt(amps)+" A";
-  $("invDetails").textContent="DC input estimate: "+fmt(dcW,0)+
-    " W · Inverter loading: "+fmt(invW?load/invW*100:0)+"%"+
-    (load>invW?" · WARNING: load exceeds rated power.":"")+
-    (invV!==bankV?" · WARNING: inverter voltage does not match bank.":"");
-
-  const sccA=Math.max(0,n("sccA"));
-  const sccV=Math.max(0,n("sccV"));
-  const coldV=Math.max(0,n("stringVoc"))*Math.min(150,Math.max(100,n("cold")))/100;
-  const charge=pv/Math.max(1,n("sccBV"));
-  const warnings=[];
-  if(coldV>sccV) warnings.push("WARNING: cold-adjusted Voc exceeds maximum PV voltage.");
-  if(charge>sccA) warnings.push("WARNING: estimated charge current exceeds SCC rating.");
-  if(n("sccBV")!==bankV) warnings.push("WARNING: SCC voltage does not match battery bank.");
-  if(invV!==bankV) warnings.push("WARNING: inverter voltage does not match battery bank.");
-
-  $("chargeOut").textContent=fmt(charge)+" A";
-  $("sccDetails").textContent="Cold-adjusted Voc estimate: "+fmt(coldV)+
-    " V · Approx. controller power at this voltage: "+
-    fmt(sccA*n("sccBV"),0)+" W. "+(warnings.join(" ")||"No basic voltage/current warnings from entered values; verify all datasheets.");
-  $("sccDetails").style.color=warnings.length?"#ffd27d":"#5be0ad";
-  $("summary").textContent="PV array: "+fmt(pv/1000,2)+" kW · Battery bank: "+
-    fmt(bankV,0)+" V, "+fmt(bankAh,0)+" Ah · Daily solar estimate: "+
-    fmt(daily/1000,2)+" kWh · Review all component limits before use.";
+function n(id) {
+  const value = Number($(id).value);
+  return Number.isFinite(value) ? value : 0;
 }
-document.querySelectorAll("input,select").forEach(el=>el.addEventListener("input",calculate));
-function resetValues(){
-  Object.keys(initial).forEach(id=>$(id).value=initial[id]);
+
+function fmt(value, decimals=1) {
+  if (!Number.isFinite(value)) return "—";
+  return value.toLocaleString("en-US", {
+    maximumFractionDigits: decimals,
+    minimumFractionDigits: 0
+  });
+}
+
+function put(id, value) {
+  $(id).textContent = value;
+}
+
+function note(message, type="") {
+  const el = document.createElement("div");
+  el.className = "notice" + (type ? " " + type : "");
+  el.textContent = message;
+  $("warnings").appendChild(el);
+}
+
+function calculate() {
+  const panelW = n("panelW");
+  const qty = Math.floor(n("panelQty"));
+  const series = Math.floor(n("series"));
+  const psh = n("psh");
+  const derate = n("derate") / 100;
+  const voc = n("voc");
+  const vmp = n("vmp");
+  const vocFactor = n("vocFactor");
+
+  const batV = n("batV");
+  const batAh = n("batAh");
+  const batSeries = Math.floor(n("batSeries"));
+  const batParallel = Math.floor(n("batParallel"));
+  const dod = n("dod") / 100;
+
+  const sccA = n("sccA");
+  const sccVoc = n("sccVoc");
+  const sccMin = n("sccMin");
+  const sccMax = n("sccMax");
+  const sccEff = n("sccEff") / 100;
+  const sccPVMaxW = n("sccPVMaxW");
+
+  const invW = n("invW");
+  const loadW = n("loadW");
+  const invEff = n("invEff") / 100;
+  const invV = n("invV");
+  const surgeW = n("surgeW");
+
+  const validPanels = qty > 0 && series > 0 && panelW > 0;
+  const validBattery = batSeries > 0 && batParallel > 0 &&
+                       batV > 0 && batAh > 0;
+  const validSCC = sccA > 0 && sccEff > 0;
+  const validInverter = invV > 0 && invEff > 0;
+
+  const pvW = validPanels ? panelW * qty : 0;
+  const strings = validPanels ? qty / series : 0;
+  const stringVoc = validPanels ? voc * series : 0;
+  const stringVmp = validPanels ? vmp * series : 0;
+  const coldVoc = stringVoc * vocFactor;
+  const pvCurrent = stringVmp > 0 ? pvW / stringVmp : 0;
+  const dailyWh = pvW * psh * derate;
+
+  const bankV = validBattery ? batV * batSeries : 0;
+  const bankAh = validBattery ? batAh * batParallel : 0;
+  const totalBatteries = validBattery ? batSeries * batParallel : 0;
+  const nominalWh = bankV * bankAh;
+  const usableWh = nominalWh * dod;
+
+  const effectiveInvV = invV;
+  const dcCurrent = validInverter && loadW > 0
+    ? loadW / (effectiveInvV * invEff) : 0;
+
+  const rawChargeA = validSCC && bankV > 0
+    ? pvW * sccEff / bankV : 0;
+  const chargeA = Math.min(rawChargeA, sccA);
+  const chargePower = chargeA * bankV;
+
+  const canShow = x => fmt(x);
+  put("rPV", canShow(pvW));
+  put("rBat", canShow(nominalWh));
+  put("rEnergy", canShow(dailyWh / 1000));
+  put("rCharge", canShow(chargeA) + " A");
+
+  put("diagramPV", canShow(pvW) + " W total");
+  put("diagramSCC", canShow(sccA) + " A rated");
+  put("diagramBattery", canShow(bankV) + " V bank");
+  put("diagramInverter", canShow(loadW) + " W load");
+
+  put("oConfig", validPanels
+    ? `${series} in series × ${fmt(strings,2)} strings; ${qty} total panels`
+    : "Check panel values");
+  put("oVmp", canShow(stringVmp) + " V");
+  put("oVoc", canShow(stringVoc) + " V");
+  put("oColdVoc", canShow(coldVoc) + " V");
+  put("oEnergy", canShow(dailyWh / 1000) + " kWh/day");
+  put("oBatV", canShow(bankV) + " V");
+  put("oBatAh", canShow(bankAh) + " Ah");
+  put("oUsable", canShow(usableWh / 1000) + " kWh");
+  put("oDC", canShow(dcCurrent) + " A");
+  put("oPVCurrent", canShow(pvCurrent) + " A");
+  put("oSCCPower", `${canShow(pvW)} W / ${canShow(sccPVMaxW)} W`);
+  put("oChargePower", canShow(chargePower) + " W");
+
+  const w = $("warnings");
+  w.replaceChildren();
+
+  if (!validPanels || qty % Math.max(series,1) !== 0) {
+    note("Panel configuration: total panels should divide evenly into the selected number of panels in series.", "warn");
+  } else {
+    note("Panel arrangement: " + series + " panels in series per string, " +
+      (qty / series) + " parallel string(s).", "good");
+  }
+
+  if (bankV > 0 && invV > 0) {
+    if (Math.abs(bankV - invV) > 0.01) {
+      note(`Battery/inverter voltage mismatch: bank is ${fmt(bankV)} V, but inverter input is ${fmt(invV)} V.`, "bad");
+    } else {
+      note("Battery bank voltage matches the selected inverter input voltage.", "good");
+    }
+  }
+
+  if (validPanels && sccVoc > 0) {
+    if (coldVoc >= sccVoc) {
+      note(`Cold-adjusted PV Voc (${fmt(coldVoc)} V) reaches or exceeds the SCC maximum (${fmt(sccVoc)} V). Unsafe unless corrected.`, "bad");
+    } else if (coldVoc >= sccVoc * 0.95) {
+      note(`Cold-adjusted PV Voc (${fmt(coldVoc)} V) is close to the SCC maximum (${fmt(sccVoc)} V). Verify with the panel temperature coefficient and local minimum temperature.`, "warn");
+    } else {
+      note("Cold-adjusted PV Voc is below the entered SCC maximum. Verify using the actual panel temperature coefficient and design temperature.", "good");
+    }
+  }
+
+  if (validPanels && sccMin > 0 && sccMax > 0) {
+    if (sccMin > sccMax) {
+      note("SCC MPPT range is invalid: minimum voltage exceeds maximum voltage.", "bad");
+    } else if (stringVmp < sccMin || stringVmp > sccMax) {
+      note(`String Vmp (${fmt(stringVmp)} V) is outside the entered MPPT operating range (${fmt(sccMin)}–${fmt(sccMax)} V).`, "warn");
+    } else {
+      note("String Vmp is inside the entered SCC MPPT operating range.", "good");
+    }
+  }
+
+  if (pvW > sccPVMaxW && sccPVMaxW > 0) {
+    note(`PV array power (${fmt(pvW)} W) exceeds the SCC entered PV power limit (${fmt(sccPVMaxW)} W). Check the manufacturer limits.`, "warn");
+  } else if (sccPVMaxW > 0) {
+    note("PV array power is within the entered SCC PV power limit.", "good");
+  }
+
+  if (rawChargeA > sccA && bankV > 0) {
+    note(`Estimated charging current (${fmt(rawChargeA)} A before limiting) exceeds the SCC rated output current (${fmt(sccA)} A).`, "warn");
+  }
+
+  if (validBattery && dod > 0) {
+    if (dod > 1) note("Usable capacity percentage must not exceed 100%.", "bad");
+    if (n("dod") > 100 || n("dod") <= 0) {
+      note("Enter a usable battery capacity percentage from 1 to 100.", "bad");
+    }
+  }
+
+  if (loadW > invW && invW > 0) {
+    note(`Running load (${fmt(loadW)} W) exceeds the inverter rated power (${fmt(invW)} W).`, "bad");
+  } else if (invW > 0) {
+    note("Running load is within the inverter's entered continuous power rating. Check surge loads separately.", "good");
+  }
+
+  if (surgeW > 0 && surgeW > invW) {
+    note(`Expected surge (${fmt(surgeW)} W) exceeds the inverter continuous rating. Compare with its actual surge rating and duration.`, "warn");
+  }
+
+  if (bankV > 0 && effectiveInvV > 0 && bankV === effectiveInvV && validInverter) {
+    note(`Estimated DC current at ${fmt(loadW)} W load: ${fmt(dcCurrent)} A. Size cables and protection for actual operating and surge currents.`, "");
+  }
+
+  if (validBattery && bankV > 0) {
+    note(`Battery bank: ${totalBatteries} battery unit(s), ${fmt(nominalWh / 1000)} kWh nominal and ${fmt(usableWh / 1000)} kWh entered usable energy. Confirm the BMS and manufacturer's limits.`, "");
+  }
+
+  if (!validPanels || !validBattery || !validSCC || !validInverter) {
+    note("Some inputs are zero or invalid. Check the values before using these estimates.", "warn");
+  }
+}
+
+function loadSample() {
+  for (const id of inputIds) $(id).value = defaults[id];
   calculate();
 }
+
+function resetInputs() {
+  for (const id of inputIds) {
+    if (id === "batChem") $(id).value = "LiFePO4";
+    else if (id === "invV") $(id).value = "24";
+    else $(id).value = "";
+  }
+  calculate();
+}
+
+inputIds.forEach(id => {
+  $(id).addEventListener("input", calculate);
+  $(id).addEventListener("change", calculate);
+});
+
+$("sampleBtn").addEventListener("click", loadSample);
+$("resetBtn").addEventListener("click", resetInputs);
+$("printBtn").addEventListener("click", () => window.print());
+
+const printStyle = document.createElement("style");
+printStyle.textContent = `
+@media print {
+  body { background: white; color: black; }
+  .topbar, .diagram, .card, .metric, .result-panel {
+    background: white !important; color: black !important;
+    border-color: #aaa !important;
+  }
+  .actions { display: none; }
+  .intro p, .section-title span, .field label, .field small,
+  .result-row span:first-child, .metric .label, .metric .unit {
+    color: #333 !important;
+  }
+  .field input, .field select { color: black; background: white; }
+  .disclaimer { color: black; }
+  .component p { color: #333; }
+  main { max-width: none; }
+}
+`;
+document.head.appendChild(printStyle);
+
 calculate();
 </script>
 </body>
